@@ -12,7 +12,14 @@ from config import RAW_DATA_DIR
 logger = get_logger("Ingest.Controller")
 
 def run_ingestion(locations):
+    import shutil
     logger.info("Starting Multi-Source Data Ingestion Pipeline...")
+    
+    # Clear stale data to prevent overlapping locations
+    if os.path.exists(RAW_DATA_DIR):
+        for f in os.listdir(RAW_DATA_DIR):
+            if f.endswith('.csv'):
+                os.remove(os.path.join(RAW_DATA_DIR, f))
     
     datasets = {
         'weather': fetch_weather(locations),

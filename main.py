@@ -123,25 +123,25 @@ def main():
         reason = report['4_explainability_module']['score_reasoning']
         rec = report['5_intelligence_layer']['recommendation']
         
-        print(f"\n📍 Location: {loc}  |  🕒 Time: {time}")
+        print(f"\nLocation: {loc}  |  Time: {time}")
         print("-" * 50)
-        print("📊 [1] INGESTED DATA:")
+        print("[1] INGESTED DATA:")
         ing = report['1_ingestion_layer']
-        print(f"   🌧️ Rainfall: {ing.get('weather_rainfall_mm')} mm")
-        print(f"   💧 Humidity: {ing.get('weather_humidity_pct')} %")
-        print(f"   🛰️ Flood Extent: {ing.get('satellite_flood_pct')} %")
-        print(f"   🏢 Buildings Nearby: {ing.get('osm_buildings')}")
+        print(f"   Rainfall: {ing.get('weather_rainfall_mm')} mm")
+        print(f"   Humidity: {ing.get('weather_humidity_pct')} %")
+        print(f"   Flood Extent: {ing.get('satellite_flood_pct')} %")
+        print(f"   Buildings Nearby: {ing.get('osm_buildings')}")
         
-        print("\n🛡️  [2] VALIDATION & TRUST:")
+        print("\n[2] VALIDATION & TRUST:")
         val = report['2_validation_layer']
-        print(f"   ✅ Missing Values: {val.get('missing_values')}")
-        print(f"   ❌ Contradictions: {val.get('contradictions_detected')}")
-        print(f"   ⭐ Final Trust Score: {trust} / 1.0")
+        print(f"   Missing Values: {val.get('missing_values')}")
+        print(f"   Contradictions: {val.get('contradictions_detected')}")
+        print(f"   Final Trust Score: {trust} / 1.0")
         
-        print("\n🔍 [3] EXPLAINABILITY:")
+        print("\n[3] EXPLAINABILITY:")
         print(f"   {reason}")
         
-        print("\n🧠 [4] ACTIONABLE INTELLIGENCE:")
+        print("\n[4] ACTIONABLE INTELLIGENCE:")
         print(f"   {rec}")
         print("==================================================")
 

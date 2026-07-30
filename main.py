@@ -50,7 +50,7 @@ def generate_5_layer_json(df, output_path):
             },
             "5_intelligence_layer": {
                 "recommendation": clean_val(row.get('Intelligence_Recommendation')),
-                "action_required": clean_val(row.get('Final_Trust_Score', 1)) < 0.6 or (clean_val(row.get('Final_Trust_Score', 1)) > 0.8 and clean_val(row.get('Flood_Extent_Pct', 0)) > 30)
+                "action_required": (clean_val(row.get('Final_Trust_Score', 1)) or 1.0) < 0.6 or ((clean_val(row.get('Final_Trust_Score', 1)) or 1.0) > 0.8 and (clean_val(row.get('Flood_Extent_Pct', 0)) or 0.0) > 30)
             }
         }
         reports.append(report)

@@ -1,0 +1,26 @@
+[
+    {
+        "location": "ASSAM",
+        "status": "Validated",
+        "merged_data": {
+            "rainfall": 0.0,
+            "humidity": 77,
+            "flood_extent": 24.06,
+            "river_distance": 150,
+            "historical_rainfall": 180
+        },
+        "validation": {
+            "missing_values": 0,
+            "invalid_values": 0,
+            "contradictions": 0,
+            "freshness": "Weather updated 10 minutes ago"
+        },
+        "source_quality": {
+            "weather": 95,
+            "eo": 95,
+            "satellite": 87,
+            "osm": 100,
+            "climate": 93
+        }
+    }
+]

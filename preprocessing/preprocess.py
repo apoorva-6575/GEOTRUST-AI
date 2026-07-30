@@ -9,9 +9,23 @@ logger = get_logger("Preprocess")
 def align_schemas():
     logger.info("Loading raw datasets from disk and aligning schemas...")
     
-    base_df = pd.DataFrame({'Location_ID': [f"LOC-00{i+1}" for i in range(3)]})
-    
     # Load all available raw data from disk
+    sources = ['weather', 'osm', 'sentinel', 'dem', 'river', 'historical']
+    
+    # Dynamically find all unique Location_IDs from raw data
+    unique_locs = set()
+    for name in sources:
+        file_path = os.path.join(RAW_DATA_DIR, f"{name}_raw.csv")
+        if os.path.exists(file_path):
+            df = pd.read_csv(file_path)
+            if 'Location_ID' in df.columns:
+                unique_locs.update(df['Location_ID'].dropna().unique())
+                
+    if not unique_locs:
+        # Fallback if somehow no data was ingested
+        unique_locs = {"UNKNOWN_LOC"}
+        
+    base_df = pd.DataFrame({'Location_ID': list(unique_locs)})
     sources = ['weather', 'osm', 'sentinel', 'dem', 'river', 'historical']
     for name in sources:
         file_path = os.path.join(RAW_DATA_DIR, f"{name}_raw.csv")

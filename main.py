@@ -108,11 +108,42 @@ def main():
     
     logger.info(f"Pipeline Complete. Generated 5-layer JSON at: {json_path}")
     
-    # Print the JSON to the console so the user can see it immediately
-    logger.info("\n--- FINAL INTELLIGENCE OUTPUT ---")
-    with open(json_path, 'r') as f:
-        print(f.read())
+    # Print a beautiful, human-readable summary to the console
+    logger.info("\n==================================================")
+    logger.info("   FINAL INTELLIGENCE REPORT")
     logger.info("==================================================")
+    
+    with open(json_path, 'r') as f:
+        reports = json.load(f)
+        
+    for report in reports:
+        loc = report['location_id']
+        time = report['timestamp']
+        trust = report['3_trust_scoring_framework']['final_trust_score']
+        reason = report['4_explainability_module']['score_reasoning']
+        rec = report['5_intelligence_layer']['recommendation']
+        
+        print(f"\n📍 Location: {loc}  |  🕒 Time: {time}")
+        print("-" * 50)
+        print("📊 [1] INGESTED DATA:")
+        ing = report['1_ingestion_layer']
+        print(f"   🌧️ Rainfall: {ing.get('weather_rainfall_mm')} mm")
+        print(f"   💧 Humidity: {ing.get('weather_humidity_pct')} %")
+        print(f"   🛰️ Flood Extent: {ing.get('satellite_flood_pct')} %")
+        print(f"   🏢 Buildings Nearby: {ing.get('osm_buildings')}")
+        
+        print("\n🛡️  [2] VALIDATION & TRUST:")
+        val = report['2_validation_layer']
+        print(f"   ✅ Missing Values: {val.get('missing_values')}")
+        print(f"   ❌ Contradictions: {val.get('contradictions_detected')}")
+        print(f"   ⭐ Final Trust Score: {trust} / 1.0")
+        
+        print("\n🔍 [3] EXPLAINABILITY:")
+        print(f"   {reason}")
+        
+        print("\n🧠 [4] ACTIONABLE INTELLIGENCE:")
+        print(f"   {rec}")
+        print("==================================================")
 
 if __name__ == "__main__":
     main()

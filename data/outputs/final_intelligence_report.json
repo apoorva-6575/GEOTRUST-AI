@@ -1,0 +1,86 @@
+[
+    {
+        "location_id": "LOC-001",
+        "timestamp": "2026-07-31 01:16",
+        "1_ingestion_layer": {
+            "weather_rainfall_mm": 0.8,
+            "weather_humidity_pct": 99,
+            "satellite_flood_pct": 16.81,
+            "osm_buildings": null,
+            "osm_rivers": null,
+            "dem_elevation_m": 136.0
+        },
+        "2_validation_layer": {
+            "missing_values": "None",
+            "contradictions_detected": 1,
+            "source_reliability": 95
+        },
+        "3_trust_scoring_framework": {
+            "final_trust_score": 0.8,
+            "uncertainty_indicator": "Medium"
+        },
+        "4_explainability_module": {
+            "score_reasoning": "-20%: ML Anomaly detected (multi-variate contradiction)."
+        },
+        "5_intelligence_layer": {
+            "recommendation": "INFO: Normal conditions. Continue automated monitoring.",
+            "action_required": false
+        }
+    },
+    {
+        "location_id": "LOC-002",
+        "timestamp": "2026-07-31 01:16",
+        "1_ingestion_layer": {
+            "weather_rainfall_mm": 0.0,
+            "weather_humidity_pct": 87,
+            "satellite_flood_pct": 25.67,
+            "osm_buildings": null,
+            "osm_rivers": null,
+            "dem_elevation_m": 57.0
+        },
+        "2_validation_layer": {
+            "missing_values": "None",
+            "contradictions_detected": 0,
+            "source_reliability": 95
+        },
+        "3_trust_scoring_framework": {
+            "final_trust_score": 1.0,
+            "uncertainty_indicator": "Low"
+        },
+        "4_explainability_module": {
+            "score_reasoning": "Perfect score. All validation, quality, and consistency checks passed successfully."
+        },
+        "5_intelligence_layer": {
+            "recommendation": "INFO: Normal conditions. Continue automated monitoring.",
+            "action_required": false
+        }
+    },
+    {
+        "location_id": "LOC-003",
+        "timestamp": "2026-07-31 01:16",
+        "1_ingestion_layer": {
+            "weather_rainfall_mm": 0.1,
+            "weather_humidity_pct": 90,
+            "satellite_flood_pct": 15.39,
+            "osm_buildings": null,
+            "osm_rivers": null,
+            "dem_elevation_m": 7.0
+        },
+        "2_validation_layer": {
+            "missing_values": "None",
+            "contradictions_detected": 0,
+            "source_reliability": 95
+        },
+        "3_trust_scoring_framework": {
+            "final_trust_score": 1.0,
+            "uncertainty_indicator": "Low"
+        },
+        "4_explainability_module": {
+            "score_reasoning": "Perfect score. All validation, quality, and consistency checks passed successfully."
+        },
+        "5_intelligence_layer": {
+            "recommendation": "INFO: Normal conditions. Continue automated monitoring.",
+            "action_required": false
+        }
+    }
+]

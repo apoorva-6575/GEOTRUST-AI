@@ -1,4 +1,7 @@
 import os
+import json
+import datetime
+import pandas as pd
 from config import TEST_LOCATIONS, OUTPUT_DIR
 from ingestion.ingest import run_ingestion
 from preprocessing.preprocess import align_schemas
@@ -13,18 +16,76 @@ from utils.logger import get_logger
 
 logger = get_logger("GeoTrust-AI.Main")
 
+def generate_5_layer_json(df, output_path):
+    reports = []
+    
+    for _, row in df.iterrows():
+        # Handle nan gracefully for JSON
+        def clean_val(val):
+            if pd.isna(val): return None
+            return val
+
+        report = {
+            "location_id": clean_val(row.get('Location_ID')),
+            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "1_ingestion_layer": {
+                "weather_rainfall_mm": clean_val(row.get('Rainfall_mm')),
+                "weather_humidity_pct": clean_val(row.get('Humidity_pct')),
+                "satellite_flood_pct": clean_val(row.get('Flood_Extent_Pct')),
+                "osm_buildings": clean_val(row.get('Nearby_Buildings')),
+                "osm_rivers": clean_val(row.get('Nearby_Rivers')),
+                "dem_elevation_m": clean_val(row.get('Elevation_m'))
+            },
+            "2_validation_layer": {
+                "missing_values": "None" if row.get('Quality_Passed', True) else "Detected",
+                "contradictions_detected": 1 if row.get('Anomaly_Flag', False) or row.get('Consistency_Flag', False) else 0,
+                "source_reliability": clean_val(row.get('Source_Reliability_Score'))
+            },
+            "3_trust_scoring_framework": {
+                "final_trust_score": clean_val(row.get('Final_Trust_Score')),
+                "uncertainty_indicator": "High" if clean_val(row.get('Final_Trust_Score', 1)) < 0.6 else ("Medium" if clean_val(row.get('Final_Trust_Score', 1)) < 0.9 else "Low")
+            },
+            "4_explainability_module": {
+                "score_reasoning": clean_val(row.get('Trust_Explanation'))
+            },
+            "5_intelligence_layer": {
+                "recommendation": clean_val(row.get('Intelligence_Recommendation')),
+                "action_required": clean_val(row.get('Final_Trust_Score', 1)) < 0.6 or (clean_val(row.get('Final_Trust_Score', 1)) > 0.8 and clean_val(row.get('Flood_Extent_Pct', 0)) > 30)
+            }
+        }
+        reports.append(report)
+        
+    with open(output_path, 'w') as f:
+        json.dump(reports, f, indent=4)
+
 def main():
     logger.info("==================================================")
-    logger.info(" GeoTrust-AI - Modular Data Engineering Pipeline")
+    logger.info(" GeoTrust-AI - Full 5-Layer Pipeline")
     logger.info("==================================================")
     
-    # 1. Ingestion Layer (Saves to data/raw/)
-    run_ingestion(TEST_LOCATIONS)
+    # 0. Interactive Input & Geocoding
+    import sys
+    from utils.geocoder import geocode_place
     
-    # 2. Preprocessing Layer (Reads from data/raw/, saves to data/processed/)
+    print("\n--------------------------------------------------")
+    place_name = input("📍 Enter a city or region name to analyze (e.g., 'Guwahati', 'Assam'): ")
+    print("--------------------------------------------------\n")
+    
+    if not place_name.strip():
+        place_name = "Guwahati" # Default if empty
+        
+    lat, lon = geocode_place(place_name)
+    locations = [(lat, lon, place_name.upper())]
+    
+    import pandas as pd
+    
+    # 1. Ingestion Layer
+    run_ingestion(locations)
+    
+    # 2. Preprocessing Layer
     unified_df = align_schemas()
     
-    # 3. Validation Layer (Operates on Processed Data)
+    # 3. Validation Layer
     df = assess_quality(unified_df)
     df = detect_anomalies(df)
     df = check_consistency(df)
@@ -34,19 +95,23 @@ def main():
     df = compute_trust_score(df)
     df = generate_explanations(df)
     
-    # 5. Intelligence / Recommendations
+    # 5. Intelligence
     df = generate_recommendations(df)
     
-    # 6. Output
+    # Output to massive JSON file
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_path = os.path.join(OUTPUT_DIR, "validated_dataset.csv")
-    df.to_csv(output_path, index=False)
-    logger.info(f"Pipeline Complete. Validated dataset saved to {output_path}")
+    csv_path = os.path.join(OUTPUT_DIR, "validated_dataset.csv")
+    json_path = os.path.join(OUTPUT_DIR, "final_intelligence_report.json")
     
-    # Print a quick summary of the intelligence to the console
-    logger.info("\n--- Executive Summary ---")
-    for _, row in df.iterrows():
-        logger.info(f"[{row['Location_ID']}] Score: {row['Final_Trust_Score']} -> {row['Intelligence_Recommendation']}")
+    df.to_csv(csv_path, index=False)
+    generate_5_layer_json(df, json_path)
+    
+    logger.info(f"Pipeline Complete. Generated 5-layer JSON at: {json_path}")
+    
+    # Print the JSON to the console so the user can see it immediately
+    logger.info("\n--- FINAL INTELLIGENCE OUTPUT ---")
+    with open(json_path, 'r') as f:
+        print(f.read())
     logger.info("==================================================")
 
 if __name__ == "__main__":

@@ -1,14 +1,14 @@
 [
     {
-        "location_id": "MUMBAI",
-        "timestamp": "2026-07-31 01:52",
+        "location_id": "MANSAROVAR",
+        "timestamp": "2026-07-31 01:58",
         "1_ingestion_layer": {
-            "weather_rainfall_mm": 0.1,
-            "weather_humidity_pct": 84,
-            "satellite_flood_pct": 8.01,
+            "weather_rainfall_mm": 0.0,
+            "weather_humidity_pct": 82,
+            "satellite_flood_pct": 4.46,
             "osm_buildings": null,
             "osm_rivers": null,
-            "dem_elevation_m": 29.0
+            "dem_elevation_m": 418.0
         },
         "2_validation_layer": {
             "missing_values": "None",

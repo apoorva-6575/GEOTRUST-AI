@@ -35,7 +35,15 @@ def simulate_sentinel(locations):
     sat_data = []
     for _, _, loc_id in locations:
         is_dehradun = "DEHRADUN" in str(loc_id).upper()
-        mock_extent = 48.5 if is_dehradun else round(np.random.uniform(0, 40), 2)
+        is_delhi = "DELHI" in str(loc_id).upper()
+        
+        if is_dehradun:
+            mock_extent = 48.5
+        elif is_delhi:
+            mock_extent = 0.0 # Contradiction: 250mm rain but 0% flood
+        else:
+            mock_extent = round(np.random.uniform(0, 40), 2)
+            
         sat_data.append({
             'Location_ID': loc_id,
             'Flood_Extent_Pct': mock_extent,
